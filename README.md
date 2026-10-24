@@ -6,19 +6,23 @@ Ask a question in plain English and get an answer from a SQL database. A local L
 
 **Web UI: generated SQL, executed SQL, explanation, results, generation mode**
 
-![SafeSQL UI](docs/screenshots/01-streamlit-ui.png)
+<img width="1838" height="882" alt="image" src="https://github.com/user-attachments/assets/06eedf5f-f049-42cc-a367-4bce27609076" />
+
 
 **Results table (MySQL)**
 
-![Results table](docs/screenshots/02-results-table.png)
+<img width="1423" height="440" alt="image" src="https://github.com/user-attachments/assets/73049ab8-f99a-421d-86a2-50bbf7d2f9c1" />
+
 
 **API response on MySQL (note `DATE_FORMAT`; the validator added `LIMIT 100`)**
 
-![API response](docs/screenshots/03-api-response-mysql.png)
+<img width="1341" height="838" alt="image" src="https://github.com/user-attachments/assets/0c315de4-e5e0-46f1-9cfc-90d2e85e6e1f" />
+
 
 **Database-level protection: the app account cannot read `customers.email`**
 
-![MySQL permission denied](docs/screenshots/04-mysql-permission-denied.png)
+<img width="1038" height="512" alt="image" src="https://github.com/user-attachments/assets/c95547b2-8658-4597-926a-2d57a1fd37dd" />
+
 
 ## Problem
 
