@@ -1,4 +1,3 @@
-
 # SafeSQL: Natural Language to SQL with Security Guardrails
 
 Ask a question in plain English and get an answer from a SQL database. A local LLM (Ollama) can draft the SQL, but SafeSQL treats that SQL as **untrusted input**: it is parsed, checked against an allowlist, row-limited, and executed by a **read-only MySQL account**. No paid APIs, no cloud services.
@@ -95,16 +94,16 @@ Seed data (all fictional, deterministic): 16 customers (3 never order), 12 produ
 
 ## Security design
 
-| Layer                            | What it does                                                                                                                                                                                  | Why it is needed                                                                    |
-| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Parser (SQLGlot, target dialect) | Exactly one statement; root must be SELECT/UNION; blocks DML, DDL, GRANT,`INTO`, locks, session variables                                                                                   | Syntax-aware rather than regex; handles comments, quoting and`;` inside strings   |
-| Allowlist                        | No schema-qualified names (blocks`information_schema`, `mysql.*`); tables must be approved or a CTE; columns resolved against the approved schema; `*` expands to approved columns only | Stops reading data the app never meant to expose                                    |
-| Function control                 | Untyped functions rejected unless allowlisted;`SLEEP`, `LOAD_FILE`, `VERSION`, `USER` and similar denied                                                                              | Blocks denial of service and server introspection                                   |
-| Regenerate and re-verify         | The executed text is regenerated from the validated AST (comments stripped), re-parsed and re-checked                                                                                         | Removes parser/database differences such as MySQL`/*! ... */` executable comments |
-| Row limit                        | `LIMIT` added or lowered to `MAX_ROWS`; `fetchmany` as a second cap                                                                                                                     | Bounded responses                                                                   |
-| Timeout                          | MySQL`MAX_EXECUTION_TIME`                                                                                                                                                                   | Bounded cost                                                                        |
-| Database permissions             | Dedicated account,`GRANT SELECT (columns)` per table, no `email`, read-only session                                                                                                       | Last line of defence if every check above had a bug                                 |
-| API hygiene                      | Input length limits, request-size limit, generic error messages, no secrets in logs                                                                                                           | No internal leakage                                                                 |
+| Layer | What it does | Why it is needed |
+|---|---|---|
+| Parser (SQLGlot, target dialect) | Exactly one statement; root must be SELECT/UNION; blocks DML, DDL, GRANT, `INTO`, locks, session variables | Syntax-aware rather than regex; handles comments, quoting and `;` inside strings |
+| Allowlist | No schema-qualified names (blocks `information_schema`, `mysql.*`); tables must be approved or a CTE; columns resolved against the approved schema; `*` expands to approved columns only | Stops reading data the app never meant to expose |
+| Function control | Untyped functions rejected unless allowlisted; `SLEEP`, `LOAD_FILE`, `VERSION`, `USER` and similar denied | Blocks denial of service and server introspection |
+| Regenerate and re-verify | The executed text is regenerated from the validated AST (comments stripped), re-parsed and re-checked | Removes parser/database differences such as MySQL `/*! ... */` executable comments |
+| Row limit | `LIMIT` added or lowered to `MAX_ROWS`; `fetchmany` as a second cap | Bounded responses |
+| Timeout | MySQL `MAX_EXECUTION_TIME` | Bounded cost |
+| Database permissions | Dedicated account, `GRANT SELECT (columns)` per table, no `email`, read-only session | Last line of defence if every check above had a bug |
+| API hygiene | Input length limits, request-size limit, generic error messages, no secrets in logs | No internal leakage |
 
 Parameterization protects application-written statements (seeding, `CREATE USER`); it does **not** make arbitrary generated SQL safe, which is why the layers above exist. The executor accepts only a `ValidatedSQL` object, which only the validator can produce, so no code path (LLM or fallback) can skip validation.
 
@@ -128,12 +127,13 @@ Verified by running it (Windows, Python 3.13, MySQL 8.0.45):
 - All 103 tests pass.
 - `scripts.init_db` creates the database, the restricted `safesql_app` account, the schema and the seed data in MySQL.
 - `scripts.verify_db` runs as the restricted account and reports `VERIFY: OK`.
-- The API and Streamlit UI answer the documented example questions against MySQL.
+- The API and Streamlit UI returned correct results against MySQL for example questions (monthly revenue, low-stock products). All 10 demo questions are covered by automated tests on SQLite.
 - MySQL itself refuses the app account access to `customers.email` (`ERROR 1143`).
 
 Not verified:
 
 - A real Ollama model. The LLM path is tested only against a mocked HTTP server, so model accuracy is unmeasured. Without Ollama the app runs in labelled demo mode.
+- Query-timeout behaviour on MySQL. The `MAX_EXECUTION_TIME` setting is applied on each query, but a timeout has not been triggered there.
 
 ## Prerequisites (Windows)
 
