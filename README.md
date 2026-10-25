@@ -1,6 +1,8 @@
 # SafeSQL: Natural Language to SQL with Security Guardrails
 
-Ask a question in plain English and get an answer from a SQL database. A local LLM (Ollama) can draft the SQL, but SafeSQL treats that SQL as **untrusted input**: it is parsed, checked against an allowlist, row-limited, and executed by a **read-only MySQL account**. No paid APIs, no cloud services.
+SafeSQL lets you ask questions about a database in plain English, such as *"Which products have fewer than ten units in stock?"*, and returns the real results from MySQL.
+
+An AI model (a local Ollama model, so no paid API) can write the SQL, but AI-written SQL can be wrong or dangerous. So SafeSQL treats it as **untrusted input** and checks it before it ever touches the database. No paid APIs, no cloud services.
 
 ## Screenshots
 
