@@ -2,8 +2,7 @@
 
 SafeSQL lets you ask questions about a database in plain English, such as *"Which products have fewer than ten units in stock?"*, and returns the real results from MySQL.
 
-An AI model (a local Ollama model, so no paid API) can write the SQL, but AI-written SQL can be wrong or dangerous. So SafeSQL treats it as **untrusted input** and checks it before it ever touches the database. No paid APIs, no cloud services.
-
+A local AI model (Ollama, so no paid API or cloud service) can write the SQL, but AI-written SQL can be wrong or dangerous. So SafeSQL treats it as **untrusted input** and checks it before it ever touches the database. When Ollama isn't running, a clearly labelled demo mode answers a fixed set of 10 questions instead.
 ## Screenshots
 
 **Web UI: generated SQL, executed SQL, explanation, results, generation mode**
@@ -25,6 +24,15 @@ An AI model (a local Ollama model, so no paid API) can write the SQL, but AI-wri
 
 <img width="1038" height="512" alt="image" src="https://github.com/user-attachments/assets/c95547b2-8658-4597-926a-2d57a1fd37dd" />
 
+## How it works
+
+1. **You ask a question** in plain English (web UI or API).
+2. **SQL is generated** by a local LLM through Ollama. If Ollama isn't running, a clearly labelled demo mode answers 10 documented questions instead.
+3. **The SQL is validated.** It must be a single `SELECT`, use only approved tables and columns, and avoid dangerous functions. A row limit is added.
+4. **Only the validated SQL runs**, using a MySQL account that has read-only access and cannot see the `email` column.
+5. **You get the results**, plus the generated SQL, the SQL actually executed, and a plain-language explanation.
+
+If the SQL fails any check (for example `DROP TABLE customers`), it is rejected and nothing is executed.
 
 ## Problem
 
