@@ -3,7 +3,7 @@
 SafeSQL lets you ask questions about a database in plain English, such as *"Which products have fewer than ten units in stock?"*, and returns the real results from MySQL.
 
 A local AI model (Ollama, so no paid API or cloud service) can write the SQL, but AI-written SQL can be wrong or dangerous. So SafeSQL treats it as **untrusted input** and checks it before it ever touches the database. When Ollama isn't running, a clearly labelled demo mode answers a fixed set of 10 questions instead.
-## Screenshots
+## Screenshots:
 
 **Web UI: generated SQL, executed SQL, explanation, results, generation mode**
 
