@@ -26,11 +26,47 @@ A local AI model (Ollama, so no paid API or cloud service) can write the SQL, bu
 
 ## How it works
 
-1. **You ask a question** in plain English (web UI or API).
-2. **SQL is generated** by a local LLM through Ollama. If Ollama isn't running, a clearly labelled demo mode answers 10 documented questions instead.
-3. **The SQL is validated.** It must be a single `SELECT`, use only approved tables and columns, and avoid dangerous functions. A row limit is added.
-4. **Only the validated SQL runs**, using a MySQL account that has read-only access and cannot see the `email` column.
-5. **You get the results**, plus the generated SQL, the SQL actually executed, and a plain-language explanation.
+```
+ ┌──────────────────────────────────────────────┐
+ │  1. YOU ASK                                  │
+ │  "Which products have fewer than 10 in       │
+ │   stock?"            (web UI or API)         │
+ └──────────────────────┬───────────────────────┘
+                        ▼
+ ┌──────────────────────────────────────────────┐
+ │  2. SQL IS GENERATED                         │
+ │  Local LLM (Ollama), or the labelled demo    │
+ │  mode if Ollama isn't running                │
+ └──────────────────────┬───────────────────────┘
+                        ▼
+ ┌──────────────────────────────────────────────┐
+ │  3. SQL IS VALIDATED (treated as untrusted)  │
+ │  single SELECT only · approved tables and    │
+ │  columns only · no dangerous functions ·     │
+ │  row limit added                             │
+ └─────────────┬─────────────────┬──────────────┘
+          passes                fails
+               ▼                 ▼
+ ┌──────────────────────┐  ┌──────────────────────┐
+ │  4. RUN              │  │  REJECTED            │
+ │  Read-only MySQL     │  │  Reason is shown,    │
+ │  account, no access  │  │  nothing is executed │
+ │  to the email column │  │                      │
+ └──────────┬───────────┘  └──────────────────────┘
+            ▼
+ ┌──────────────────────────────────────────────┐
+ │  5. YOU GET THE RESULTS                      │
+ │  Results table · generated SQL · SQL that    │
+ │  actually ran · plain-language explanation   │
+ └──────────────────────────────────────────────┘
+```
+
+| Step | What happens | Where in the code |
+|---|---|---|
+| Generate | The question becomes a candidate SQL statement | `app/services/sql_generator.py` |
+| Validate | The SQL is parsed, allowlisted, row-limited and rewritten | `app/services/sql_validator.py` |
+| Execute | Only validated SQL runs, with a timeout, as a read-only user | `app/services/query_service.py` |
+| Respond | Results, both SQL versions, mode label and explanation are returned | `app/api/routes.py` |
 
 If the SQL fails any check (for example `DROP TABLE customers`), it is rejected and nothing is executed.
 
