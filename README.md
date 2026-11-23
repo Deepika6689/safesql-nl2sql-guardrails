@@ -6,6 +6,12 @@ A local AI model (Ollama, so no paid API or cloud service) can write the SQL, bu
 
 
 The hosted version runs in labelled demo mode, so it answers the 10 documented example questions (listed under "Example questions" below). It does not use a real LLM. Try a blocked query to see the validator in action. The hosted version may be slow to wake up on first load.
+## 🚀 Live Demo
+
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://s-prod-62d52aad-4336-4f96-a28a-2c3be41a6d7d.freecode.page/)
+
+Explore the SafeSQL demo console using fictional test data.
+This is a standalone demo and does not connect to the actual MySQL backend.
 ## Screenshots:
 
 **Web UI: generated SQL, executed SQL, explanation, results, generation mode**
