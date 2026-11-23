@@ -16,8 +16,7 @@ This is a standalone demo and does not connect to the actual MySQL backend.
 
 **Web UI: generated SQL, executed SQL, explanation, results, generation mode**
 
-<img width="1838" height="882" alt="image" src="https://github.com/user-attachments/assets/06eedf5f-f049-42cc-a367-4bce27609076" />
-
+<img width="1442" height="901" alt="image" src="https://github.com/user-attachments/assets/5d3e939b-d09c-483c-89f6-c0b8b214d21a" />
 
 **Results table (MySQL)**
 
