@@ -20,7 +20,8 @@ This is a standalone demo and does not connect to the actual MySQL backend.
 
 **Results table (MySQL)**
 
-<img width="1423" height="440" alt="image" src="https://github.com/user-attachments/assets/73049ab8-f99a-421d-86a2-50bbf7d2f9c1" />
+<img width="1427" height="367" alt="image" src="https://github.com/user-attachments/assets/404f6e2a-3c60-4fa1-a5b2-e446336b901f" />
+
 
 
 **API response on MySQL (note `DATE_FORMAT`; the validator added `LIMIT 100`)**
