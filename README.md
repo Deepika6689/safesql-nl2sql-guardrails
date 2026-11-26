@@ -11,6 +11,7 @@ The hosted version runs in labelled demo mode, so it answers the 10 documented e
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://s-prod-62d52aad-4336-4f96-a28a-2c3be41a6d7d.freecode.page/)
 
 A standalone demo console using fictional test data. It does not use a real LLM or connect to the MySQL backend. It may be slow to load the first time.
+
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)
